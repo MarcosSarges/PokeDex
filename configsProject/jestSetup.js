@@ -29,3 +29,17 @@ jest.mock('react-native-safe-area-context', () => {
     SafeAreaProvider: MockSafeAreaProvider,
   };
 });
+
+jest.mock('styled-components/native', () => {
+  const React = require('react');
+  class MockStyledComponentsProvider extends React.Component {
+    render() {
+      const { children } = this.props;
+      return React.createElement('ThemeProvider', this.props, children);
+    }
+  }
+  return {
+    useSafeAreaInsets: () => ({ top: 1, right: 2, bottom: 3, left: 4 }),
+    ThemeProvider: MockStyledComponentsProvider,
+  };
+});

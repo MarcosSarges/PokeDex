@@ -1,13 +1,15 @@
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
 import theme from '@styles/theme';
+import MainRouters from './routers/MainRouters';
+import { ThemeProvider } from 'styled-components/native';
 
 const App: React.FC = () => {
   return (
-    <SafeAreaView>
-      <Text style={[theme.fonts.headline1]}>start</Text>
-      <Text style={[theme.fonts.bodyText1]}>start</Text>
-    </SafeAreaView>
+    // <ReduxProvider store={store}>
+    <ThemeProvider theme={theme}>
+      <MainRouters />
+    </ThemeProvider>
+    // </ReduxProvider>
   );
 };
 

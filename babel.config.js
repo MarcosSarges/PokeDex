@@ -9,7 +9,12 @@ module.exports = {
       {
         root: ['./'],
         alias: {
+          '@services': './src/services',
+          '@store': './src/store',
+          '@screens': './src/screens',
           '@styles': './src/styles',
+          '@configs': './src/configs',
+          '@assets': './assets',
         },
       },
     ],

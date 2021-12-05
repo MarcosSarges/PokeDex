@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "es2015",
+    "module": "commonjs",
     "lib": ["es2017"],
     "allowJs": true,
     "jsx": "react-native",
@@ -13,7 +13,12 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@styles/*": ["./src/styles/*"]
+      "@services/*": ["./src/services/*"],
+      "@store/*": ["./src/store/*"],
+      "@screens/*": ["./src/screens/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@configs/*": ["./src/configs/*"],
+      "@assets/*": ["./assets/*"]
     },
     "types": ["jest", "styled-components-react-native"],
     "allowSyntheticDefaultImports": true /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
