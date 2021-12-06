@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import 'react-native-gesture-handler/jestSetup';
+import 'jest-styled-components';
 
 jest.mock('react-native-gesture-handler', () =>
   jest.requireActual('../node_modules/react-native-gesture-handler/jestSetup'),
@@ -30,6 +31,14 @@ jest.mock('react-native-safe-area-context', () => {
   };
 });
 
+jest.mock('react-native/Libraries/Utilities/Platform', () => {
+  const Platform = jest.requireActual(
+    'react-native/Libraries/Utilities/Platform',
+  );
+  Platform.OS = 'android';
+  return Platform;
+});
+
 jest.mock('styled-components/native', () => {
   const React = require('react');
   class MockStyledComponentsProvider extends React.Component {
@@ -39,7 +48,6 @@ jest.mock('styled-components/native', () => {
     }
   }
   return {
-    useSafeAreaInsets: () => ({ top: 1, right: 2, bottom: 3, left: 4 }),
     ThemeProvider: MockStyledComponentsProvider,
   };
 });

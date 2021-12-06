@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Platform } from 'react-native';
+import ImageColors from 'react-native-image-colors';
+import Color from 'color';
+
 import { IRefPokemon } from '@services/getPokemons';
 import getDetailsPokemon, { IPokemon } from '@services/getDetailsPokemon';
-import ImageColors from 'react-native-image-colors';
+import getIdPokemon from '@helpers/getIdPokemon';
 
 import * as Styled from './styles';
-import Color from 'color';
-import getIdPokemon from '@helpers/getIdPokemon';
 
 interface ICardPokemon extends IRefPokemon {
   onPressCard(pokemon: IPokemon, pokeColor: string): void;
