@@ -5,15 +5,18 @@ import * as Styled from './styles';
 import getPokemons, { IRefPokemon } from '@services/getPokemons';
 import CardPokemon from './components/CardPokemon';
 import { useNavigation } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MainStackParamList } from 'src/routers/MainRouters';
 
 const List: React.FC = () => {
-  const { navigate } = useNavigation();
+  const { navigate } =
+    useNavigation<StackNavigationProp<MainStackParamList, 'PokemonDetails'>>();
 
   const [pokemons, setPokemons] = useState<IRefPokemon[]>([]);
 
   useEffect(() => {
     const bootstrap = () => {
-      getPokemons()
+      getPokemons(0)
         .then(result => {
           setPokemons(result.results);
         })
@@ -27,8 +30,8 @@ const List: React.FC = () => {
   const renderItem: ListRenderItem<IRefPokemon> = ({ item }) => {
     return (
       <CardPokemon
-        onPressCard={pokemon => {
-          navigate('PokemonDetails', { pokemon });
+        onPressCard={(pokemon, pokeColor) => {
+          navigate('PokemonDetails', { pokemon, pokeColor });
         }}
         name={item.name}
         url={item.url}

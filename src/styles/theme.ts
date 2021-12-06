@@ -23,12 +23,12 @@ const theme = {
       letterSpacing: 0.15,
     },
     subtitle1: {
-      fontSize: RFValue(14),
+      fontSize: RFValue(16),
       fontFamily: Montserrat.regular,
       letterSpacing: 0.15,
     },
     subtitle2: {
-      fontSize: RFValue(14),
+      fontSize: RFValue(16),
       fontFamily: Montserrat.medium,
       letterSpacing: 0.1,
     },
@@ -61,6 +61,7 @@ const theme = {
   colors: {
     primary: '#df5248',
     white: '#FFF',
+    black: '#222222',
   },
   shadows: {},
 };

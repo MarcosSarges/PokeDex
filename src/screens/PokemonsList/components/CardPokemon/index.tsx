@@ -6,24 +6,15 @@ import ImageColors from 'react-native-image-colors';
 
 import * as Styled from './styles';
 import Color from 'color';
+import getIdPokemon from '@helpers/getIdPokemon';
 
 interface ICardPokemon extends IRefPokemon {
-  onPressCard(IPokemon): void;
+  onPressCard(pokemon: IPokemon, pokeColor: string): void;
 }
 
 const CardPokemon: React.FC<ICardPokemon> = ({ name, onPressCard }) => {
   const [pokemon, setPokemon] = useState<IPokemon>({} as IPokemon);
   const [backgroundColor, setBackgroundColor] = useState<string>('');
-
-  const getIdPokemon = (id: number) => {
-    if (!id) {
-      return '';
-    }
-    const idString = id.toString();
-    const missToFive = 5 - idString.length;
-    const zerosCompleteId = Array(missToFive).fill('0').join('');
-    return `${zerosCompleteId}${idString}`;
-  };
 
   useEffect(() => {
     const bootstrap = () => {
@@ -53,7 +44,9 @@ const CardPokemon: React.FC<ICardPokemon> = ({ name, onPressCard }) => {
   }, [pokemon]);
 
   return (
-    <Styled.Container onPress={onPressCard} backgroundColor={backgroundColor}>
+    <Styled.Container
+      onPress={() => onPressCard(pokemon, backgroundColor)}
+      backgroundColor={backgroundColor}>
       {pokemon && (
         <Styled.Sprit
           source={{
