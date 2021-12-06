@@ -13,6 +13,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
+      "*": ["./src/*"],
       "@helpers/*": ["./src/helpers/*"],
       "@routers/*": ["./src/routers/*"],
       "@services/*": ["./src/services/*"],

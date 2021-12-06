@@ -8,6 +8,7 @@ module.exports = {
       'module-resolver',
       {
         root: ['./'],
+        extensions: ['.js', '.jsx', '.tsx', '.ts', '.json'],
         alias: {
           '@helpers': './src/helpers',
           '@routers': './src/routers',

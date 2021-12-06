@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, ListRenderItem } from 'react-native';
-
-import * as Styled from './styles';
-import getPokemons, { IRefPokemon } from '@services/getPokemons';
-import CardPokemon from './components/CardPokemon';
-import { useNavigation } from '@react-navigation/core';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
+import { ListRenderItem } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MainStackParamList } from 'src/routers/MainRouters';
+import { useNavigation } from '@react-navigation/core';
 
-const List: React.FC = () => {
+import { IRefPokemon } from '@services/getPokemons';
+import { MainStackParamList } from '@routers/MainRouters';
+import { useAppDispatch, useAppSelector } from '@store/store';
+import { fetchListPokemons, nextPage } from '@store/features/listPokemons';
+
+import CardPokemon from './components/CardPokemon';
+import * as Styled from './styles';
+
+interface ScrollEvt {
+  distanceFromEnd: number;
+}
+
+const PokemonsList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { pokemons, offset } = useAppSelector(store => store.listPokemons);
+
   const { navigate } =
     useNavigation<StackNavigationProp<MainStackParamList, 'PokemonDetails'>>();
 
-  const [pokemons, setPokemons] = useState<IRefPokemon[]>([]);
+  const loadingMorePokemons = ({ distanceFromEnd }: ScrollEvt) => {
+    if (distanceFromEnd <= 100) {
+      dispatch(nextPage());
+    }
+  };
 
   useEffect(() => {
-    const bootstrap = () => {
-      getPokemons(0)
-        .then(result => {
-          setPokemons(result.results);
-        })
-        .catch(() => {
-          Alert.alert('Ops!', 'Não foi possivel listar seu Pokedex');
-        });
-    };
-    bootstrap();
-  }, []);
+    const loadPokemons = () => dispatch(fetchListPokemons());
+    loadPokemons();
+  }, [offset]);
 
   const renderItem: ListRenderItem<IRefPokemon> = ({ item }) => {
     return (
@@ -46,11 +53,15 @@ const List: React.FC = () => {
       </Styled.Header>
       <Styled.List
         ItemSeparatorComponent={() => <Styled.ItemSeparator />}
+        keyExtractor={item => item.name}
         data={pokemons}
+        // @ts-ignore
         renderItem={renderItem}
+        onEndReached={loadingMorePokemons}
+        scrollEventThrottle={16}
       />
     </Styled.Container>
   );
 };
 
-export default List;
+export default PokemonsList;

@@ -1,22 +1,33 @@
-import Api from '@configs/Api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
-interface IFetchListPokemons {}
+import getPokemons, { IRefPokemon } from '@services/getPokemons';
+import unionby from 'lodash.unionby';
+interface IListPokemonSlice {
+  pokemons: IRefPokemon[];
+  loading: 'loading' | 'idle';
+  offset: number;
+}
 
 export const fetchListPokemons = createAsyncThunk(
   'getListPokemons',
   async (_, thunkApi) => {
-    const { offset, limit } = thunkApi.getState().listPokemons;
-    const response = await Api.get(`/pokemon?limit=${limit}&offset=${offset}`);
-    return response.data;
+    // @ts-ignore
+    const { offset } = thunkApi.getState().listPokemons;
+    const response = await getPokemons(offset);
+    return response;
   },
 );
 
+const INITIAL_STATE: IListPokemonSlice = {
+  pokemons: [],
+  loading: 'idle',
+  offset: 0,
+};
+
 const listPokemonsSlice = createSlice({
   name: 'listPokemons',
-  initialState: { pokemons: [], loading: 'idle', offset: 0, limit: 10 },
+  initialState: INITIAL_STATE,
   reducers: {
-    nextPagePokemons: state => {
+    nextPage: state => {
       state.offset += 10;
     },
   },
@@ -28,12 +39,12 @@ const listPokemonsSlice = createSlice({
       state.loading = 'idle';
     });
     builder.addCase(fetchListPokemons.fulfilled, (state, action) => {
-      const newState = { ...state };
-      newState.loading = 'idle';
-      return newState;
+      state.loading = 'idle';
+      state.pokemons = unionby(state.pokemons, action.payload.results, 'name');
     });
   },
 });
 
-export const { nextPagePokemons } = listPokemonsSlice.actions;
+export const { nextPage } = listPokemonsSlice.actions;
+
 export default listPokemonsSlice.reducer;

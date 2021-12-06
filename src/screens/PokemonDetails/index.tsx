@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/core';
-import { MainStackParamList } from '@routers/MainRouters';
+import { Alert } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { useNavigation, useRoute } from '@react-navigation/core';
+
+import { MainStackParamList } from '@routers/MainRouters';
+import parserDecimetersToMeters from '@helpers/parserDecimetresToMeters';
 import parserHectogramToKg from '@helpers/parserHectogramToKg';
+import getSpecie from '@services/getSpecie';
 
 import * as Styled from './styles';
-import parserDecimetersToMeters from '@helpers/parserDecimetresToMeters';
-import { Alert } from 'react-native';
-import getSpecie from '@services/getSpecie';
 
 type Props = StackScreenProps<MainStackParamList, 'PokemonDetails'>;
 
-const Details: React.FC = () => {
+const PokemonDetails: React.FC = () => {
   const { goBack } = useNavigation();
   const { params } = useRoute<Props['route']>();
   const [space, setSpace] = useState('');
@@ -20,6 +21,10 @@ const Details: React.FC = () => {
   const uri =
     pokemon?.sprites?.other['official-artwork'].front_default ||
     pokemon?.sprites?.front_default;
+
+  const types = pokemon?.types?.map(type => type.type.name)?.join(', ') || '';
+  const height = parserDecimetersToMeters(pokemon.height);
+  const weight = parserHectogramToKg(pokemon.weight);
 
   useEffect(() => {
     const bootstrap = () => {
@@ -32,7 +37,10 @@ const Details: React.FC = () => {
           );
         })
         .catch(() => {
-          Alert.alert('Ops!', 'Não foi possivel listar seu Pokedex');
+          Alert.alert(
+            'Ops!',
+            'Não foi possivel capturar alguns informações do seu Pokédex',
+          );
         });
     };
     bootstrap();
@@ -60,18 +68,12 @@ const Details: React.FC = () => {
         </Styled.SectionBox>
         <Styled.SectionBox>
           <Styled.Section>Tipos</Styled.Section>
-          <Styled.Info>
-            {pokemon?.types?.map(type => type.type.name)?.join(', ') || ''}
-          </Styled.Info>
+          <Styled.Info>{types}</Styled.Info>
         </Styled.SectionBox>
         <Styled.SectionBox>
           <Styled.Section>Medidas</Styled.Section>
-          <Styled.Info>
-            Peso: {parserHectogramToKg(pokemon.weight)} kg
-          </Styled.Info>
-          <Styled.Info>
-            Altura: {parserDecimetersToMeters(pokemon.height)} m
-          </Styled.Info>
+          <Styled.Info>Peso: {weight} kg</Styled.Info>
+          <Styled.Info>Altura: {height} m</Styled.Info>
         </Styled.SectionBox>
         <Styled.SectionBox>
           <Styled.Section>Estatísticas iniciais</Styled.Section>
@@ -86,4 +88,4 @@ const Details: React.FC = () => {
   );
 };
 
-export default Details;
+export default PokemonDetails;
